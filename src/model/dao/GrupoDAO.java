@@ -209,16 +209,14 @@ public class GrupoDAO extends Conexao{
     }
     
     public Grupo find(int codigoGrupo){
-        PreparedStatement st = null;
+        Statement st = null;
         ResultSet rs = null;
         Grupo retorno = new Grupo();
         
-        String sql = "SELECT * FROM GRUPO WHERE (CD_GRUPO = ?)";
+        String sql = "SELECT * FROM GRUPO WHERE CD_GRUPO =" + codigoGrupo;
         
         try{
-            st = conexao.prepareStatement(sql);
-            
-            st.setInt   (1, codigoGrupo);
+            st = conexao.createStatement();
                         
             rs = st.executeQuery(sql);
             
@@ -240,6 +238,7 @@ public class GrupoDAO extends Conexao{
         }
         
         catch(SQLException e){
+            System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(null, "Erro ao executar a operação.");
         }
         
@@ -249,6 +248,7 @@ public class GrupoDAO extends Conexao{
                     rs.close();
                 }
                 catch(SQLException e){
+            System.out.println("1"+e.getMessage());
                 }
             }
             if(st != null){
@@ -256,6 +256,7 @@ public class GrupoDAO extends Conexao{
                     st.close();
                 }
                 catch(SQLException e){
+            System.out.println("2"+e.getMessage());
                 }
             }
         }
@@ -306,17 +307,15 @@ public class GrupoDAO extends Conexao{
     }
     
     public void somarPontosGrupo(int codigoGrupo, int pontos){
-        PreparedStatement st1 = null;
+        Statement st1 = null;
         PreparedStatement st2 = null;
         ResultSet rs = null;
         int pontosAtuais = 0;
-        String sql = "SELECT * FROM GRUPO WHERE (CD_GRUPO = ?)";
+        String sql = "SELECT * FROM GRUPO WHERE CD_GRUPO =" + codigoGrupo;
         
         try{
-            st1 = conexao.prepareStatement(sql);
+            st1 = conexao.createStatement();
             
-            st1.setInt   (1, codigoGrupo);
-                        
             rs = st1.executeQuery(sql);
             
             if(rs.next()){
@@ -325,6 +324,7 @@ public class GrupoDAO extends Conexao{
         }
         
         catch(SQLException e){
+            System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(null, "Erro ao executar a operação.");
         }
         
@@ -457,7 +457,7 @@ public class GrupoDAO extends Conexao{
         return retorno;
     }
     
-    public int quantidadeGrupos(){
+    public int getQuantidadeGrupos(){
         Statement st = null;
         ResultSet rs = null;
         int retorno = 0;
@@ -469,8 +469,8 @@ public class GrupoDAO extends Conexao{
             
             rs = st.executeQuery(sql);
             
-            while(rs.next())
-                retorno++;
+            if(rs.last())
+                retorno = rs.getInt("CD_GRUPO");
         }
         
         catch(SQLException e){

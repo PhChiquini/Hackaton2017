@@ -23,7 +23,7 @@ public class Conexao {
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/sad_boys?zeroDateTimeBehavior=convertToNull";
         String user = "root";
-        String pass = "Fmu@123";
+        String pass = "";
         conexao = null;
         
         try{
@@ -33,7 +33,7 @@ public class Conexao {
             }
         conexao = DriverManager.getConnection(url,user,pass);
         }catch(SQLException ex){
-            JOptionPane.showConfirmDialog(null, "Erro na conexão, contate o administrador." );
+            JOptionPane.showMessageDialog(null, "Erro na conexão, contate o administrador."+ ex.getMessage());
         }
         return conexao;
     }
@@ -44,7 +44,7 @@ public class Conexao {
                 conexao.close();
         }
         }catch(SQLException ex){
-            JOptionPane.showConfirmDialog(null, "Erro na conexão, contate o administrador." );
+            JOptionPane.showMessageDialog(null, "Erro na conexão, contate o administrador." );
         }
     }
 }

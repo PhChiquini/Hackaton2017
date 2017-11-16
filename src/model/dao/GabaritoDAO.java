@@ -9,7 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.bean.Gabarito;
-import model.bean.PostoDeControle;
 
 /**
  *
@@ -20,9 +19,9 @@ public class GabaritoDAO extends Conexao{
         super();
     }
     
-    private void insert(Gabarito gab) {
+    public void insert(Gabarito gab) {
         PreparedStatement st = null;
-        String sql = "INSERT INTO pont_controle (resp_01,"
+        String sql = "INSERT INTO gabarito (resp_01,"
                 + "resp_02,resp_03, resp_04,resp_05,resp_06,"
                 + "resp_07,resp_08,resp_09,resp_10,resp_11,"
                 + "resp_12,resp_13,resp_14,resp_15,resp_16,"
@@ -63,14 +62,14 @@ public class GabaritoDAO extends Conexao{
         }
     }
     
-    private Gabarito find(int cd_gabarito){
-        PreparedStatement st = null;
-        String sql = "SELECT * FROM gabarito WHERE cd_gab = ?";
+    public  Gabarito find(int cd_gabarito){
+        Statement st = null;
+        String sql = "SELECT * FROM gabarito WHERE cd_gab =" + cd_gabarito;
         ResultSet rs = null;
             Gabarito retorno = new Gabarito();
         try {
             
-            st = conexao.prepareStatement(sql);
+            st = conexao.createStatement();
             rs = st.executeQuery(sql);
             
             while(rs.next()){
@@ -96,11 +95,15 @@ public class GabaritoDAO extends Conexao{
                 retorno.setResposta19(rs.getInt("resp_19"));
                 retorno.setResposta20(rs.getInt("resp_20"));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }finally{
            if(st != null){
                 try{
                 st.close();
+                }catch(SQLException e){
+                }
+            } if(rs != null){
+                try{
                 rs.close();
                 }catch(SQLException e){
                 }
@@ -109,7 +112,7 @@ public class GabaritoDAO extends Conexao{
         return retorno;
     }
     
-    private ArrayList<Gabarito> findAll(){
+    public ArrayList<Gabarito> findAll(){
         Statement st = null;
         String sql = "SELECT * FROM gabarito ";
         ResultSet rs = null;
@@ -157,16 +160,22 @@ public class GabaritoDAO extends Conexao{
         return retorno; 
     }
     
-    private void updateResp1(){
+    public void updateResposta(int codigoGabarito, int questao, int reposta){
         PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_01 = ? where cd_gab = ?";
+        String s = String.valueOf(questao);
+        if(s.length() == 1) 
+            s = "0" +s;
+        
+        String sql = "UPDATE gabarito set resp_" +s+ "= ? where cd_gab = ?";
         try {
-            Gabarito gab = new Gabarito();
             st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta1());
-            st.setInt(2, gab.getCd_gabarito());
+            
+            st.setInt(1, reposta);
+            st.setInt(2, codigoGabarito);
+            
             st.executeUpdate();
         }catch(SQLException e){
+            System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(null,"Erro ao executar operação");
         }finally{
             if(st != null){
@@ -178,403 +187,44 @@ public class GabaritoDAO extends Conexao{
         }
     }
     
-    private void updateResp2(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_02 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta2());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
+    public int novoVazio(){
+        int retorno = 0;
+        Statement st = null;
+        ResultSet rs = null;
+        
+        try{
+            String sql = "INSERT INTO gabarito () VALUES () ";
+            
+            st = conexao.createStatement();
+            st.executeUpdate(sql);
+            
+            sql = "SELECT * FROM gabarito ";
+            rs = st.executeQuery(sql);
+            
+            if(rs.last())
+                retorno = rs.getInt("CD_GAB");
+            
+        }
+        catch(SQLException e){
             JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
+        }
+        finally{
+            if(rs != null){
+                try{
+                rs.close();
+                }
+                catch(SQLException e){
+                }
+            }
             if(st != null){
                 try{
                 st.close();
-                }catch(SQLException e){
+                }
+                catch(SQLException e){
                 }
             }
         }
-    }
-    
-    private void updateResp3(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_03 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta3());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp4(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_04 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta4());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp5(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_05 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta5());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp6(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_06 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta6());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp7(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_07 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta7());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp8(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_08 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta8());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp9(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_09 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta9());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp10(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_10 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta10());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp11(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_11 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta11());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp12(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_12 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta12());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp13(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_13 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta13());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp14(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_14 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta14());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp15(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_15 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta15());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp16(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_16 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta16());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp17(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_17 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta17());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp18(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_18 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta18());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp19(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_19 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta19());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
-    }
-    
-    private void updateResp20(){
-        PreparedStatement st = null;
-        String sql = "UPDATE gabarito set resp_20 = ? where cd_gab = ?";
-        try {
-            Gabarito gab = new Gabarito();
-            st = conexao.prepareStatement(sql);
-            st.setInt(1, gab.getResposta20());
-            st.setInt(2, gab.getCd_gabarito());
-            st.executeUpdate();
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao executar operação");
-        }finally{
-            if(st != null){
-                try{
-                st.close();
-                }catch(SQLException e){
-                }
-            }
-        }
+        return retorno; 
     }
     
 }

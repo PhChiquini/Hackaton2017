@@ -1,49 +1,50 @@
-package model.bean;
+package Classes;
 
 import java.util.Objects;
 
-public class Grupo {
+public class GrupoSessao {
     private int codigoGrupo;
     private String nome;
-    private int raLider;
-    private boolean caracterizado;
-    private String email;
     private int pontuacao;
+    private int pontuacaoFase2;
     private int codigoGabaritoFase1;
+    private int codigoGabaritoFase2;
     private int codigoPostoInicial;
     private int codigoAgrupamento;
     private boolean liderSegundaFase;
+    private String nomePosto;
+    private static int postoAtual;
 
-    public Grupo() {
+    public GrupoSessao() {
         super();
     }
 
-    public Grupo(int codigoGrupo, String nome, int raLider, boolean caracterizado, String email, int pontuacao, int codigoGabaritoFase1, int codigoPostoInicial, int codigoAgrupamento, boolean liderSegundaFase) {
+    public GrupoSessao(int codigoGrupo, String nome, int pontuacao, int pontuacaoFase2, int codigoGabaritoFase1, int codigoGabaritoFase2, int codigoPostoInicial, int codigoAgrupamento, boolean liderSegundaFase, String nomePosto) {
         this.codigoGrupo = codigoGrupo;
         this.nome = nome;
-        this.raLider = raLider;
-        this.caracterizado = caracterizado;
-        this.email = email;
         this.pontuacao = pontuacao;
+        this.pontuacaoFase2 = pontuacaoFase2;
         this.codigoGabaritoFase1 = codigoGabaritoFase1;
+        this.codigoGabaritoFase2 = codigoGabaritoFase2;
         this.codigoPostoInicial = codigoPostoInicial;
         this.codigoAgrupamento = codigoAgrupamento;
         this.liderSegundaFase = liderSegundaFase;
+        this.nomePosto = nomePosto;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 59 * hash + this.codigoGrupo;
-        hash = 59 * hash + Objects.hashCode(this.nome);
-        hash = 59 * hash + this.raLider;
-        hash = 59 * hash + (this.caracterizado ? 1 : 0);
-        hash = 59 * hash + Objects.hashCode(this.email);
-        hash = 59 * hash + this.pontuacao;
-        hash = 59 * hash + this.codigoGabaritoFase1;
-        hash = 59 * hash + this.codigoPostoInicial;
-        hash = 59 * hash + this.codigoAgrupamento;
-        hash = 59 * hash + (this.liderSegundaFase ? 1 : 0);
+        hash = 79 * hash + this.codigoGrupo;
+        hash = 79 * hash + Objects.hashCode(this.nome);
+        hash = 79 * hash + this.pontuacao;
+        hash = 79 * hash + this.pontuacaoFase2;
+        hash = 79 * hash + this.codigoGabaritoFase1;
+        hash = 79 * hash + this.codigoGabaritoFase2;
+        hash = 79 * hash + this.codigoPostoInicial;
+        hash = 79 * hash + this.codigoAgrupamento;
+        hash = 79 * hash + (this.liderSegundaFase ? 1 : 0);
+        hash = 79 * hash + Objects.hashCode(this.nomePosto);
         return hash;
     }
 
@@ -58,20 +59,20 @@ public class Grupo {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Grupo other = (Grupo) obj;
+        final GrupoSessao other = (GrupoSessao) obj;
         if (this.codigoGrupo != other.codigoGrupo) {
-            return false;
-        }
-        if (this.raLider != other.raLider) {
-            return false;
-        }
-        if (this.caracterizado != other.caracterizado) {
             return false;
         }
         if (this.pontuacao != other.pontuacao) {
             return false;
         }
+        if (this.pontuacaoFase2 != other.pontuacaoFase2) {
+            return false;
+        }
         if (this.codigoGabaritoFase1 != other.codigoGabaritoFase1) {
+            return false;
+        }
+        if (this.codigoGabaritoFase2 != other.codigoGabaritoFase2) {
             return false;
         }
         if (this.codigoPostoInicial != other.codigoPostoInicial) {
@@ -86,10 +87,24 @@ public class Grupo {
         if (!Objects.equals(this.nome, other.nome)) {
             return false;
         }
-        if (!Objects.equals(this.email, other.email)) {
+        if (!Objects.equals(this.nomePosto, other.nomePosto)) {
             return false;
         }
         return true;
+    }
+    
+    public void incrementPostoAtual(){
+        postoAtual++;
+        if(postoAtual == 6)
+            postoAtual = 1;
+    }
+
+    public int getPostoAtual() {
+        return postoAtual;
+    }
+
+    public void setPostoAtual(int postoAtual) {
+        this.postoAtual = postoAtual;
     }
 
     public int getCodigoGrupo() {
@@ -108,30 +123,6 @@ public class Grupo {
         this.nome = nome;
     }
 
-    public int getRaLider() {
-        return raLider;
-    }
-
-    public void setRaLider(int raLider) {
-        this.raLider = raLider;
-    }
-
-    public boolean isCaracterizado() {
-        return caracterizado;
-    }
-
-    public void setCaracterizado(boolean caracterizado) {
-        this.caracterizado = caracterizado;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public int getPontuacao() {
         return pontuacao;
     }
@@ -140,12 +131,28 @@ public class Grupo {
         this.pontuacao = pontuacao;
     }
 
+    public int getPontuacaoFase2() {
+        return pontuacaoFase2;
+    }
+
+    public void setPontuacaoFase2(int pontuacaoFase2) {
+        this.pontuacaoFase2 = pontuacaoFase2;
+    }
+
     public int getCodigoGabaritoFase1() {
         return codigoGabaritoFase1;
     }
 
     public void setCodigoGabaritoFase1(int codigoGabaritoFase1) {
         this.codigoGabaritoFase1 = codigoGabaritoFase1;
+    }
+
+    public int getCodigoGabaritoFase2() {
+        return codigoGabaritoFase2;
+    }
+
+    public void setCodigoGabaritoFase2(int codigoGabaritoFase2) {
+        this.codigoGabaritoFase2 = codigoGabaritoFase2;
     }
 
     public int getCodigoPostoInicial() {
@@ -170,6 +177,14 @@ public class Grupo {
 
     public void setLiderSegundaFase(boolean liderSegundaFase) {
         this.liderSegundaFase = liderSegundaFase;
+    }
+
+    public String getNomePosto() {
+        return nomePosto;
+    }
+
+    public void setNomePosto(String nomePosto) {
+        this.nomePosto = nomePosto;
     }
 
 }

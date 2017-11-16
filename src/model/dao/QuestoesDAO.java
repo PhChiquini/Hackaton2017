@@ -13,46 +13,40 @@ public class QuestoesDAO extends Conexao {
 
     public void Insert(Questoes quest) {
         PreparedStatement st = null;
-        String aux = "insert into questoes (CD_QUEST, PERG_QUEST, R1_QUEST, R2_QUEST, R3_QUEST, R4_QUEST, R5_QUEST, RESP_CORRETA, IMAGEM, CD_PC)"
+        String aux = "insert into questoes (PERG_QUEST, R1_QUEST, R2_QUEST, R3_QUEST, R4_QUEST, R5_QUEST, RESP_CORRETA, IMAGEM, CD_PC, CD_QUEST  )"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
-            st = conexao.prepareStatement(aux, Statement.RETURN_GENERATED_KEYS);
-            st.setInt(1, quest.getCd_quest());
-            st.setString(2, quest.getPergunta());
-            st.setString(3, quest.getAlternativa1());
-            st.setString(4, quest.getAlternativa2());
-            st.setString(5, quest.getAlternativa3());
-            st.setString(6, quest.getAlternativa4());
-            st.setString(7, quest.getAlternativa5());
-            st.setInt(8, quest.getCorreta());
-            st.setInt(10, quest.getCd_pc());
-         
-            
+            st = conexao.prepareStatement(aux);
+            st.setString(1, quest.getPergunta());
+            st.setString(2, quest.getAlternativa1());
+            st.setString(3, quest.getAlternativa2());
+            st.setString(4, quest.getAlternativa3());
+            st.setString(5, quest.getAlternativa4());
+            st.setString(6, quest.getAlternativa5());
+            st.setInt(7, quest.getCorreta());
+            st.setInt(9, quest.getCd_pc());
+            st.setInt(10, quest.getCd_quest());
             if (quest.isImagem()) {
-                st.setInt(9, 1);
+                st.setInt(8, 1);
             } else {
-                st.setInt(9, 0);
+                st.setInt(8, 0);
             }
-
             st.executeUpdate();
-            
-            
+            JOptionPane.showMessageDialog(null, "Questão cadastrada.");
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao executar operação." +ex.getMessage());
-            
+            JOptionPane.showMessageDialog(null, "Erro ao executar operação.");
         } finally {
             if (st != null) {
                 try {
                     st.close();
                 } catch (SQLException ex) {
-                    
 
                 }
             }
         }
     }
 
-    private ArrayList<Questoes> findAll() {
+    public ArrayList<Questoes> findAll() {
         Statement st = null;
         ResultSet rs = null;
         ArrayList<Questoes> quest = new ArrayList<>();
@@ -94,7 +88,7 @@ public class QuestoesDAO extends Conexao {
         return quest;
     }
 
-    private void UpdateAgrup() {
+    public void UpdateQuestao() {
         PreparedStatement st = null;
         String sql = "UPDATE questoes SET PERG_QUEST = ?, R1_QUEST = ?, R2_QUEST = ?,"
                 + "R3_QUEST = ?, R4_QUEST = ?, R5_QUEST = ?, RESP_CORRETA = ?, IMAGEM = ? WHERE CD_QUEST = ?";
@@ -127,20 +121,50 @@ public class QuestoesDAO extends Conexao {
         }
     }
     
-    public boolean retExist(int cod){
-        boolean retorno = false;
+    public Questoes find(int codigoQuestao){
         Statement st = null;
         ResultSet rs = null;
-        String sql = "SELECT * FROM questoes WHERE CD_QUEST = " + cod;
+        Questoes quest = new Questoes();
+        String sql = "SELECT * FROM QUESTOES WHERE CD_QUEST = " + codigoQuestao;
         try {
-            
             st = conexao.createStatement();
-            rs = st.executeQuery(sql);          
-            if(rs.next())
-                retorno = true;
+            
+            
+            rs = st.executeQuery(sql);
+
+            if(rs.first()) {
+                quest.setCd_quest(rs.getInt("CD_QUEST"));
+                quest.setPergunta(rs.getString("PERG_QUEST"));
+                quest.setAlternativa1(rs.getString("R1_QUEST"));
+                quest.setAlternativa2(rs.getString("R2_QUEST"));
+                quest.setAlternativa3(rs.getString("R3_QUEST"));
+                quest.setAlternativa4(rs.getString("R4_QUEST"));
+                quest.setAlternativa5(rs.getString("R5_QUEST"));
+                quest.setCorreta(rs.getInt("RESP_CORRETA"));
+                quest.setCd_pc(rs.getInt("CD_PC"));
+                if (1 == rs.getInt("IMAGEM")) {
+                    quest.setImagem(true);
+                } else {
+                    quest.setImagem(false);
+                }
+            }
         } catch (SQLException ex) {
-           JOptionPane.showMessageDialog(null, "Erro ao executar operação");
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao executar operação.");
+        } finally {
+            if(rs != null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException ex) {
+                }
+            }
         }
-        return retorno;
+        return quest;
     }
 }

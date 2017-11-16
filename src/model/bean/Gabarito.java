@@ -335,6 +335,51 @@ public class Gabarito {
         this.resposta20 = resposta20;
     }
     
-    
+    public int getResposta(int questao){
+        switch(questao){
+            case 1:
+                return resposta1;
+            case 2:
+                return resposta2;
+            case 3:
+                return resposta3;
+            case 4:
+                return resposta4;
+            case 5:
+                return resposta5;
+            case 6:
+                return resposta6;
+            case 7:
+                return resposta7;
+            case 8:
+                return resposta8;
+            case 9:
+                return resposta9;
+            case 10:
+                return resposta10;
+            case 11:
+                return resposta11;
+            case 12:
+                return resposta12;
+            case 13:
+                return resposta13;
+            case 14:
+                return resposta14;
+            case 15:
+                return resposta15;
+            case 16:
+                return resposta16;
+            case 17:
+                return resposta17;
+            case 18:
+                return resposta18;
+            case 19:
+                return resposta19;
+            case 20:
+                return resposta20;
+            default:
+                return 0;    
+        }
+    }
     
 }
